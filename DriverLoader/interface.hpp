@@ -92,25 +92,27 @@ public:
 	bool callFunction(uintptr_t function, T* ret_val, A... args)
 	{
 		uintptr_t dxg_base = getKernelModuleBase("dxgkrnl.sys");
-		uintptr_t ntQuery = getModuleExport("NtDxgkVailPromoteCompositionSurface", dxg_base);
-		if (!ntQuery)
+		//uintptr_t ntQuery = getModuleExport("NtDxgkVailPromoteCompositionSurface", dxg_base);
+		uintptr_t ntFuncHook = getModuleExport("DxgkSubmitPresentBltToHwQueue", dxg_base);
+
+		if (!ntFuncHook)
 			return false;
 		byte shell_code[] = { 0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xe0 };
 		*(uintptr_t*)&shell_code[2] = function;
 		byte original_bytes[sizeof(shell_code)];
-		writeMemory(ntQuery, (uintptr_t)&original_bytes, sizeof(original_bytes));
-		if (!writeReadOnlyMemory((uintptr_t)shell_code, ntQuery, sizeof(shell_code)))
+		writeMemory(ntFuncHook, (uintptr_t)&original_bytes, sizeof(original_bytes));
+		if (!writeReadOnlyMemory((uintptr_t)shell_code, ntFuncHook, sizeof(shell_code)))
 			return false;
 
 		HMODULE win32Dll = LoadLibraryA("win32u.dll");
 		if (win32Dll)
 		{
-			void* dxg_hook = (void*)GetProcAddress(win32Dll, "NtDxgkVailPromoteCompositionSurface");
+			void* dxg_hook = (void*)GetProcAddress(win32Dll, "NtDxgkSubmitPresentBltToHwQueue");
 			*ret_val = funcTemplate<T>(dxg_hook, args...);
 			FreeLibrary(win32Dll);
 		}
 		
-		if (!writeReadOnlyMemory((uintptr_t)original_bytes, ntQuery, sizeof(shell_code)))
+		if (!writeReadOnlyMemory((uintptr_t)original_bytes, ntFuncHook, sizeof(shell_code)))
 			std::cout << "Failed to remove hook" << std::endl;
 
 		return win32Dll;
