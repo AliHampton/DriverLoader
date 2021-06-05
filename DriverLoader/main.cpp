@@ -23,7 +23,7 @@ std::vector<uint8_t> getFile(LPCSTR fileName)
 
 bool mapDriver(std::vector<byte> file, std::wstring arbitrary_name)
 {
-	DriverLoader loader(L"Intel3");
+	DriverLoader loader(arbitrary_name);
 	if (!loader.load_driver((char*)intel::intel_driver, sizeof(intel::intel_driver)))
 	{
 		std::cout << "failed to load driver" << std::endl;
@@ -63,6 +63,7 @@ bool mapDriver(std::vector<byte> file, std::wstring arbitrary_name)
 	{
 		std::cout << "failed to allocate pool" << std::endl;
 	}
+
 	if (!loader.unload_driver())
 		std::cout << "failed to unload driver" << std::endl;
 
