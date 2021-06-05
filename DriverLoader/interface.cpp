@@ -159,3 +159,8 @@ bool KeInterface::writeReadOnlyMemory(uintptr_t source, uintptr_t destination, u
 
 	return result;
 }
+
+bool KeInterface::cleanUp()
+{
+	return CloseHandle(hDriver);
+}

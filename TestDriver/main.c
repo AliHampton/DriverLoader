@@ -2,7 +2,7 @@
 
 DRIVER_INITIALIZE DriverEntry;
 
-NTSTATUS DriverEntry(_In_  struct _DRIVER_OBJECT* DriverObject, _In_ PUNICODE_STRING RegistryPath)
+NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 {
 	UNREFERENCED_PARAMETER(DriverObject);
 	UNREFERENCED_PARAMETER(RegistryPath);

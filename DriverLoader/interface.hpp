@@ -52,11 +52,11 @@ class KeInterface
 	bool unMapIoSpace(uintptr_t base_virtual_address, uint32_t size);
 	bool writeReadOnlyMemory(uintptr_t source, uintptr_t destination, uintptr_t size);
 
-
 public:
 
 	KeInterface();
 	bool writeMemory(uintptr_t source, uintptr_t destination, uint64_t size);
+	bool cleanUp();
 	uintptr_t getKernelModuleBase(const char* name);
 	uintptr_t getModuleExport(const char* module_name, uintptr_t module_base);
 

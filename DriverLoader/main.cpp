@@ -63,11 +63,14 @@ bool mapDriver(std::vector<byte> file, std::wstring arbitrary_name)
 	{
 		std::cout << "failed to allocate pool" << std::endl;
 	}
-
 	if (!loader.unload_driver())
 		std::cout << "failed to unload driver" << std::endl;
 
-	loader.clean_up();
+	if (!keInterface.cleanUp())
+		std::cout << "failed to close driver handle" << std::endl;
+
+	if (!loader.clean_up())
+		std::cout << "failed to clean loader" << std::endl;
 
 	return success;
 }
